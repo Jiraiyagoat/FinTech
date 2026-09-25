@@ -1,0 +1,28 @@
+# Competition / private data
+data/raw/
+*.parquet
+*transactions*.csv
+submission_*.csv
+artifacts/
+models/
+checkpoints/
+
+# Local tooling
+__pycache__/
+.DS_Store
+.vscode/
+.idea/
+
+# Never publish task/source material in this public website repository
+*.csv
+*.zip
+*.ipynb
+*.pkl
+*.joblib
+*.bin
+.env
+.env.*
+train_*
+test_*
+fintech_track_data*
+WIUT*Hackathon*

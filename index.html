@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101319" />
+  <meta name="description" content="La pasión — leakage-safe financial signal escalation intelligence for WIUT Hackathon 2026." />
+  <title>La pasión — Signal Escalation Intelligence</title>
+  <link rel="icon" href="assets/la-pasion-mark.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="assets/data.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="wordmark-wrap">
+      <div class="logo-tile" aria-hidden="true">
+        <img src="assets/la-pasion-mark.png" alt="" />
+      </div>
+      <div class="wordmark">
+        <span class="wordmark-name">La pasión</span>
+        <span class="wordmark-sub">Financial signal intelligence</span>
+      </div>
+    </div>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="#product">Product</a>
+      <a href="#eda">EDA</a>
+      <a href="#desk">Signal desk</a>
+      <a href="#method">Method</a>
+      <a href="#validation">Validation</a>
+      <a href="#team">Team</a>
+    </nav>
+
+    <div class="ref-chip" aria-label="Team reference">0388DF2D</div>
+    <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false">Menu</button>
+  </header>
+
+  <div class="mobile-menu" hidden>
+    <a href="#product">Product</a>
+    <a href="#eda">EDA</a>
+    <a href="#desk">Signal desk</a>
+    <a href="#method">Method</a>
+    <a href="#validation">Validation</a>
+    <a href="#team">Team</a>
+  </div>
+
+  <main id="main">
+    <section class="hero" id="product">
+      <div class="section-kicker">WIUT Hackathon 2026 · FinTech / AI in Finance</div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1>Escalation intelligence from transaction behavior.</h1>
+          <p class="hero-lede">
+            A leakage-safe ranking system for financial alerts. We summarize each signal’s
+            pre-event transaction history, model temporal behavior with independent tree learners,
+            and return a relative risk index for analyst triage.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#eda">Explore the EDA</a>
+            <a class="button button-quiet" href="#desk">Open signal desk</a>
+          </div>
+        </div>
+
+        <aside class="hero-aside" aria-label="Final model summary">
+          <div class="model-stamp">
+            <span class="stamp-label">Final system</span>
+            <strong>4-model rank ensemble</strong>
+            <span>CUT_A · strict pre-signal history</span>
+          </div>
+          <div class="hero-metric-grid">
+            <div><span>CV ROC-AUC</span><strong>0.6066</strong></div>
+            <div><span>Chronological</span><strong>0.6314</strong></div>
+            <div><span>Train signals</span><strong>14k</strong></div>
+            <div><span>Transactions</span><strong>10.0m</strong></div>
+          </div>
+          <p class="microcopy">Risk scores are rank-based prioritization indices, not calibrated probabilities.</p>
+        </aside>
+      </div>
+
+      <div class="fact-strip" aria-label="Project facts">
+        <div><span>01</span><strong>20,000</strong><small>signals audited</small></div>
+        <div><span>02</span><strong>≈180d</strong><small>historical window</small></div>
+        <div><span>03</span><strong>17.18%</strong><small>train escalation rate</small></div>
+        <div><span>04</span><strong>&lt; date 00:00</strong><small>strict transaction cutoff</small></div>
+      </div>
+    </section>
+
+
+    <section class="eda-section" id="eda">
+      <div class="section-head">
+        <div>
+          <span class="section-index">01 / Exploratory data analysis</span>
+          <h2>Explore first. Model second.</h2>
+        </div>
+        <p>
+          We treated the signal table and transaction history as one relational system:
+          one target-bearing signal, many historical transactions. The EDA below is calculated
+          from the competition files and directly informed the leakage cutoff and feature design.
+        </p>
+      </div>
+
+      <div class="dataset-map" aria-label="Dataset structure">
+        <article class="dataset-node">
+          <span class="mini-label">Signals</span>
+          <strong>14,000 <small>train</small></strong>
+          <strong>6,000 <small>test</small></strong>
+          <p>One row per <span class="mono">signal_id</span>; target exists only in train.</p>
+        </article>
+        <div class="relation-mark" aria-hidden="true"><span>1</span><b>→</b><span>many</span></div>
+        <article class="dataset-node">
+          <span class="mini-label">Transactions</span>
+          <strong>6.99m <small>train</small></strong>
+          <strong>3.03m <small>test</small></strong>
+          <p>Every signal has transaction history; no orphan transaction IDs were found.</p>
+        </article>
+        <article class="dataset-node dataset-node-wide">
+          <span class="mini-label">Observation frame</span>
+          <div class="dataset-mini-grid">
+            <div><strong>179.45d</strong><span>median train history</span></div>
+            <div><strong>461</strong><span>median train tx / signal</span></div>
+            <div><strong>2025–2026</strong><span>signal-date span</span></div>
+            <div><strong>0</strong><span>raw missing values</span></div>
+          </div>
+          <p class="dataset-footnote">Raw signal/transaction tables also contained no duplicate signal IDs and no exact duplicate transaction rows.</p>
+        </article>
+      </div>
+
+      <div class="eda-grid">
+        <article class="eda-card eda-card-target">
+          <div class="panel-title-row">
+            <h3>Target distribution</h3>
+            <span>14,000 train signals</span>
+          </div>
+          <div id="target-distribution" class="target-distribution"></div>
+          <p class="eda-caption"><strong>17.18%</strong> of training signals escalated. The imbalance is meaningful, but ROC-AUC evaluates ranking rather than a fixed classification threshold.</p>
+        </article>
+
+        <article class="eda-card">
+          <div class="panel-title-row">
+            <h3>Transactions per signal</h3>
+            <span>train · distribution</span>
+          </div>
+          <div id="tx-count-hist" class="eda-histogram"></div>
+          <div class="stat-line"><span>mean 499.1</span><span>median 461</span><span>p95 1,048</span><span>max 2,279</span></div>
+        </article>
+
+        <article class="eda-card">
+          <div class="panel-title-row">
+            <h3>Activity at the boundary</h3>
+            <span>last event before CUT_A</span>
+          </div>
+          <div id="recency-hist" class="recency-hist"></div>
+          <p class="eda-caption"><strong>95.4%</strong> of train signals had a transaction within 60 seconds of the midnight cutoff. Of transactions in the last 7 days, <strong>86.6%</strong> occurred in the last 24 hours.</p>
+        </article>
+
+        <article class="eda-card">
+          <div class="panel-title-row">
+            <h3>Direction & transaction types</h3>
+            <span>train · pre-signal history</span>
+          </div>
+          <div id="direction-bar" class="direction-bar"></div>
+          <div id="type-composition" class="type-composition"></div>
+          <p class="eda-caption">Incoming transactions dominate, while train/test category shares differ by only about 0.13 percentage points or less.</p>
+        </article>
+
+        <article class="eda-card eda-card-wide">
+          <div class="panel-title-row">
+            <h3>Escalated vs dismissed: marginal effects are small</h3>
+            <span>standardized mean difference · escalated − dismissed</span>
+          </div>
+          <div class="contrast-layout">
+            <div id="contrast-plot" class="contrast-plot"></div>
+            <div class="contrast-note">
+              <span class="mini-label">Why this mattered</span>
+              <strong>No single raw aggregate separated the classes strongly.</strong>
+              <p>Escalated signals were somewhat busier and had lower amount-index level/dispersion, but every audited standardized mean difference remained small. That pushed the modeling toward temporal interactions, ratios and ensemble diversity rather than one “magic” feature.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="eda-card eda-card-wide">
+          <div class="panel-title-row">
+            <h3>Amount-index distribution shifted lower for escalated signals</h3>
+            <span>per-signal pre-cutoff amount-index mean · p10–p90</span>
+          </div>
+          <div id="amount-range" class="amount-range"></div>
+          <p class="eda-caption">The variable is an <em>amount index</em>, not raw currency. Median transaction-level amount index was −0.285 for escalated signals versus −0.235 for dismissed signals.</p>
+        </article>
+
+        <article class="eda-card eda-card-wide eda-time-card">
+          <div class="panel-title-row">
+            <h3>Escalation rate moved over calendar time</h3>
+            <span>train · monthly</span>
+          </div>
+          <svg id="eda-monthly-chart" class="monthly-chart" viewBox="0 0 640 220" role="img" aria-label="Monthly escalation rate in training data"></svg>
+          <p class="eda-caption">Monthly escalation ranged from <strong>13.94%</strong> in 2025-09 to <strong>21.22%</strong> in 2026-04. This is why chronological validation was kept alongside random signal-level folds.</p>
+        </article>
+      </div>
+
+      <div class="eda-findings">
+        <div class="finding-intro">
+          <span class="mini-label">Negative findings count too</span>
+          <h3>We kept weak patterns out of the story.</h3>
+          <p>EDA was used to narrow the feature search, not to decorate the final model.</p>
+        </div>
+        <div id="negative-findings" class="finding-list"></div>
+      </div>
+
+      <div class="eda-to-model">
+        <div class="eda-to-model-copy">
+          <span class="mini-label">EDA → modeling</span>
+          <h3>What the exploration changed.</h3>
+        </div>
+        <div class="eda-decision-grid">
+          <article><span>01</span><strong>Boundary concentration</strong><p>Very recent activity motivated recency, 1h / 5h / 12h / 24h / 3d / 7d / 14d / 30d / 60d / 180d windows, velocity ratios and interarrival features.</p></article>
+          <article><span>02</span><strong>Weak raw marginals</strong><p>Small class differences motivated recent-vs-baseline deviations, interactions and multi-model blending instead of relying on transaction count alone.</p></article>
+          <article><span>03</span><strong>Near-fixed history</strong><p>≈180-day histories motivated completeness/censoring checks and long-window baselines for 30d/60d/180d comparisons.</p></article>
+          <article><span>04</span><strong>Temporal target drift</strong><p>Monthly target movement motivated a chronological holdout in addition to frozen signal-level cross-validation.</p></article>
+          <article><span>05</span><strong>Signal-day ambiguity</strong><p>The timestamp audit produced CUT_A/B/C experiments; the strict pre-date cutoff stayed because it was the safest future-facing interpretation.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="desk-section" id="desk">
+      <div class="section-head light-on-dark">
+        <div>
+          <span class="section-index">02 / Signal desk</span>
+          <h2>Inspect the behavior behind a score.</h2>
+        </div>
+        <p>
+          Interactive anonymized examples derived from competition signals. Original signal identifiers, source rows, and the full submission
+          vector are not published in this public website repository.
+        </p>
+      </div>
+
+      <div class="desk-shell">
+        <div class="desk-toolbar">
+          <label for="signal-select">Anonymized example</label>
+          <div class="select-wrap">
+            <select id="signal-select" aria-label="Choose an anonymized example"></select>
+          </div>
+          <span class="kbd-hint">Press <kbd>/</kbd> to focus</span>
+        </div>
+
+        <div class="risk-layout">
+          <div class="risk-score-block">
+            <div class="risk-eyebrow">Relative escalation risk</div>
+            <div class="risk-number" id="risk-number">—</div>
+            <div class="risk-band" id="risk-band">—</div>
+            <div class="risk-track" aria-hidden="true"><span id="risk-fill"></span></div>
+            <p id="signal-date" class="risk-date">—</p>
+            <p class="risk-note">Percentile-style index. Higher means the ensemble ranks the signal as more urgent for review.</p>
+          </div>
+
+          <div class="signal-kpis" id="signal-kpis"></div>
+        </div>
+
+        <div class="desk-grid">
+          <article class="desk-panel">
+            <div class="panel-title-row">
+              <h3>Recent activity</h3>
+              <span>transaction counts</span>
+            </div>
+            <div id="window-bars" class="window-bars"></div>
+          </article>
+
+          <article class="desk-panel">
+            <div class="panel-title-row">
+              <h3>Transaction composition</h3>
+              <span>share of pre-signal history</span>
+            </div>
+            <div id="mix-bars" class="mix-bars"></div>
+          </article>
+
+          <article class="desk-panel desk-panel-wide">
+            <div class="panel-title-row">
+              <h3>Context signals</h3>
+              <span>descriptive, not causal attribution</span>
+            </div>
+            <div class="context-tags" id="context-tags"></div>
+            <p class="panel-footnote">These notes compare the selected signal with test-set medians. They are not SHAP values and should not be read as reasons for escalation.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="method-section" id="method">
+      <div class="section-head">
+        <div>
+          <span class="section-index">03 / Method</span>
+          <h2>Built around the timestamp boundary, not around a leaderboard shortcut.</h2>
+        </div>
+        <p>
+          The signal date contains no event time. We therefore use the strictest unambiguous cutoff:
+          only transactions strictly before 00:00 on the signal date enter the production feature set.
+        </p>
+      </div>
+
+      <div class="pipeline" aria-label="Model pipeline">
+        <div class="pipe-node"><span>01</span><strong>Signal</strong><small>signal_id + signal date</small></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node emphasis"><span>02</span><strong>CUT_A</strong><small>timestamp &lt; signal date 00:00</small></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node"><span>03</span><strong>History</strong><small>≈180 days</small></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node"><span>04</span><strong>Features</strong><small>scale · recency · burstiness</small></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node"><span>05</span><strong>Rank ensemble</strong><small>4 independent views</small></div>
+      </div>
+
+      <div class="method-grid">
+        <article>
+          <div class="article-number">A</div>
+          <h3>Baseline behavior</h3>
+          <p>Transaction count, active days, amount distribution, direction mix, transaction types and history completeness.</p>
+        </article>
+        <article>
+          <div class="article-number">B</div>
+          <h3>Temporal structure</h3>
+          <p>Last-event recency, interarrival gaps, burstiness, short-gap concentration and recent cadence shifts.</p>
+        </article>
+        <article>
+          <div class="article-number">C</div>
+          <h3>Signal-level validation</h3>
+          <p>Transactions are never split across folds. One signal produces one feature row and one target.</p>
+        </article>
+        <article>
+          <div class="article-number">D</div>
+          <h3>Human-in-the-loop output</h3>
+          <p>The system prioritizes review queues. It does not claim to replace an analyst or provide a calibrated probability.</p>
+        </article>
+      </div>
+
+      <div class="ensemble-block">
+        <div class="ensemble-copy">
+          <span class="mini-label">Final ensemble</span>
+          <h3>Independent learners, common ranking scale.</h3>
+          <p>Each model’s test scores are converted to percentile ranks before weighted averaging, preventing score-scale differences from dominating the blend.</p>
+        </div>
+        <div class="ensemble-chart" id="ensemble-chart"></div>
+      </div>
+    </section>
+
+    <section class="validation-section" id="validation">
+      <div class="section-head light-on-dark">
+        <div>
+          <span class="section-index">04 / Validation</span>
+          <h2>Two validation views. One leakage decision.</h2>
+        </div>
+        <p>Random signal-level folds measure broad stability; the chronological holdout checks whether gains survive a future-facing split.</p>
+      </div>
+
+      <div class="validation-grid">
+        <article class="validation-card validation-card-large">
+          <div class="panel-title-row">
+            <h3>Model comparison</h3>
+            <span>ROC-AUC</span>
+          </div>
+          <div id="validation-bars" class="validation-bars"></div>
+        </article>
+
+        <article class="validation-card">
+          <div class="panel-title-row">
+            <h3>Risk-score distribution</h3>
+            <span>6,000 test signals</span>
+          </div>
+          <div id="score-hist" class="score-hist"></div>
+          <p class="panel-footnote">The near-0.5 center is expected from percentile-rank blending; it is not probability calibration.</p>
+        </article>
+
+        <article class="validation-card validation-principles">
+          <div class="panel-title-row">
+            <h3>Validation design</h3>
+            <span>signal-level only</span>
+          </div>
+          <div class="validation-principle-grid">
+            <div><strong>5 folds</strong><span>frozen signal-level CV</span></div>
+            <div><strong>1,761</strong><span>chronological validation signals</span></div>
+            <div><strong>0</strong><span>transaction rows split across targets</span></div>
+            <div><strong>2 views</strong><span>random stability + future-facing robustness</span></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="cutoff-block">
+        <div class="cutoff-copy">
+          <span class="mini-label">Leakage audit</span>
+          <h3>Signal-day rows were treated as an experiment, not silently assumed valid.</h3>
+          <p>Including exact-midnight rows improved ordinary CV but materially reduced chronological AUC. CUT_A stayed the production cutoff.</p>
+        </div>
+        <div class="cutoff-table-wrap">
+          <table class="cutoff-table">
+            <thead><tr><th>Cutoff</th><th>CV AUC</th><th>Chronological</th><th>Decision</th></tr></thead>
+            <tbody id="cutoff-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="impact-section" id="impact">
+      <div class="section-head">
+        <div>
+          <span class="section-index">05 / Practicality</span>
+          <h2>A review queue, not a black-box verdict.</h2>
+        </div>
+        <p>The product layer is intentionally narrow: rank alerts, preserve context, and make the decision boundary auditable.</p>
+      </div>
+
+      <div class="impact-steps">
+        <div><span>1</span><strong>Ingest</strong><p>Signal + historical transactions.</p></div>
+        <div><span>2</span><strong>Score</strong><p>Generate a leakage-safe relative risk index.</p></div>
+        <div><span>3</span><strong>Prioritize</strong><p>Move higher-risk signals up the analyst queue.</p></div>
+        <div><span>4</span><strong>Review</strong><p>Human analyst inspects transaction context and decides.</p></div>
+      </div>
+
+      <div class="operational-fit">
+        <div>
+          <span class="mini-label">Operational fit</span>
+          <h3>Designed as a layer, not a replacement system.</h3>
+        </div>
+        <div class="operational-grid">
+          <article><strong>Input</strong><p><span class="mono">signal_id</span> + historical transactions already present in a monitoring workflow.</p></article>
+          <article><strong>Output</strong><p>One relative risk index per signal, suitable for sorting an analyst review queue.</p></article>
+          <article><strong>Governance</strong><p>Strict data cutoff, leakage audit, chronological validation and a human final decision.</p></article>
+        </div>
+      </div>
+
+      <div class="criteria-band">
+        <div class="criteria-intro">
+          <span class="mini-label">Hackathon fit</span>
+          <h3>Designed for the published judging criteria.</h3>
+        </div>
+        <div class="criteria-list criteria-list-rich">
+          <div><strong>25%</strong><span>Innovation & originality</span><small>Leakage-safe cutoff audit + relative-risk triage rather than a black-box verdict.</small></div>
+          <div><strong>25%</strong><span>Technical complexity</span><small>10m+ relational transactions, temporal feature families, three tree-model families and rank ensembling.</small></div>
+          <div><strong>25%</strong><span>Impact & practicality</span><small>Ranks alerts for scarce analyst attention while preserving transaction context and human review.</small></div>
+          <div><strong>15%</strong><span>Presentation</span><small>Public interactive EDA, signal explorer, validation audit and reproducible decision trail.</small></div>
+          <div><strong>10%</strong><span>Business potential</span><small>A narrow layer that can sit upstream of an existing AML/fraud review queue without replacing analysts.</small></div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="conclusion-section" id="conclusion">
+      <div class="section-head">
+        <div>
+          <span class="section-index">06 / Conclusion</span>
+          <h2>The useful signal was in temporal shape, not a single headline variable.</h2>
+        </div>
+        <p>
+          Our strongest conclusion is methodological: preserve the event boundary, compare behavior
+          to a signal’s own history, and validate as if the next batch arrives in the future.
+        </p>
+      </div>
+
+      <div class="conclusion-grid">
+        <article><span>01</span><strong>17.18% positive</strong><p>The task is imbalanced, so ranking quality matters more than a naive accuracy threshold.</p></article>
+        <article><span>02</span><strong>95.4% within 60s</strong><p>Transaction activity concentrates extremely close to the signal boundary.</p></article>
+        <article><span>03</span><strong>Weak single features</strong><p>The best audited standard univariate feature reached only ~0.542 AUC.</p></article>
+        <article><span>04</span><strong>Strict CUT_A retained</strong><p>Signal-day rows could not be safely ordered in time and hurt chronological robustness when included.</p></article>
+        <article><span>05</span><strong>Temporal features mattered</strong><p>Recency, cadence, burstiness and behavior-vs-baseline were more defensible than raw volume alone.</p></article>
+        <article><span>06</span><strong>Human review stays final</strong><p>The output is a prioritization index for queue ordering, not a calibrated probability or autonomous decision.</p></article>
+      </div>
+
+      <div class="final-takeaway">
+        <span class="mini-label">Final takeaway</span>
+        <p>EDA changed the modeling plan: it ruled out easy shortcuts, exposed timestamp ambiguity, and focused the feature search on how transaction behavior changes as a signal approaches.</p>
+      </div>
+    </section>
+
+    <section class="team-section" id="team">
+      <div class="section-head">
+        <div>
+          <span class="section-index">07 / Team</span>
+          <h2>La pasión.</h2>
+        </div>
+        <p>Three students · FinTech / AI in Finance · team reference <span class="mono">0388DF2D</span>.</p>
+      </div>
+
+      <div class="team-layout">
+        <div class="team-mark-panel">
+          <img src="assets/la-pasion-mark.png" alt="La pasión team mark" />
+          <p>Built for WIUT Hackathon 2026.<br />Intelligence in use.</p>
+        </div>
+        <div class="team-list" id="team-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <strong>La pasión</strong>
+      <span>FinTech / AI in Finance · WIUT Hackathon 2026</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://hackathon.wiut.uz/tracks/fintech/" target="_blank" rel="noreferrer">Official track</a>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress"></span></div>
+</body>
+</html>
